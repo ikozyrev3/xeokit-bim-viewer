@@ -14,7 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup --config rollup.config.js && rollup --config rollup.dev.config.js && copyfiles -f locales/messages.js ./dist && copyfiles -f xeokit-bim-viewer.css ./dist",
     "docs": "./node_modules/.bin/esdoc",
-    "serve": "http-server . -p 8080 ",
+    "serve": "node odata-server.js",
+    "serve-static": "http-server . -p 8080",
     "changelog": "auto-changelog --commit-limit false --package --template changelog-template.hbs"
   },
   "repository": {
