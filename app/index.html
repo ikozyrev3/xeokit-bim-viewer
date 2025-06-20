@@ -194,6 +194,40 @@
                             // bimViewer.showObjectInStoreysTab(objectId);
                         });
                         break;
+                    case "focusObjectByName":
+                        const objectName = params.objectName;
+                        if (!objectName) {
+                            console.error("Param expected for `focusObjectByName` action: 'objectName'");
+                            break;
+                        }
+                        const objectIdsByName = bimViewer.findObjectsByName(objectName);
+                        if (objectIdsByName.length === 0) {
+                            console.error("No objects found with name: '" + objectName + "'");
+                            break;
+                        }
+                        bimViewer.setAllObjectsSelected(false);
+                        bimViewer.setObjectsSelected(objectIdsByName, true);
+                        bimViewer.viewFitObjects(objectIdsByName, () => {
+                            bimViewer.showObjectsByNameInExplorers(objectName);
+                        });
+                        break;
+                    case "focusObjectsByClass":
+                        const className = params.className;
+                        if (!className) {
+                            console.error("Param expected for `focusObjectsByClass` action: 'className'");
+                            break;
+                        }
+                        const objectIdsByClass = bimViewer.findObjectsByClass(className);
+                        if (objectIdsByClass.length === 0) {
+                            console.error("No objects found with class: '" + className + "'");
+                            break;
+                        }
+                        bimViewer.setAllObjectsSelected(false);
+                        bimViewer.setObjectsSelected(objectIdsByClass, true);
+                        bimViewer.viewFitObjects(objectIdsByClass, () => {
+                            bimViewer.showObjectsByClassInExplorers(className);
+                        });
+                        break;
                     case "focusObjects":
                         const objectIds = params.objectIds;
                         if (!objectIds) {
