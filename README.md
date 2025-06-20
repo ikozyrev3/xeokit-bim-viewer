@@ -923,6 +923,112 @@ Since our object info exists, we'll get a result similar to this:
 > our [````Server````](https://xeokit.github.io/xeokit-bim-viewer/docs/class/src/server/Server.js~Server.html) constructs
 > from the project, model and object IDs we supplied to the viewer's query methods.
 
+### OData Endpoint for Elements and Properties
+
+The ````Server```` class now includes OData (Open Data Protocol) endpoints that provide standardized REST API access to BIM elements and their properties. This enables external systems to query and integrate with BIM data using industry-standard OData conventions.
+
+#### OData Service Metadata
+
+Get the OData service metadata document that describes available entities:
+
+````javascript
+myBIMViewer.server.getODataMetadata((metadata) => {
+    console.log("OData service metadata:", metadata);
+});
+````
+
+#### Get Elements for a Project
+
+Query all elements and their properties for a project in OData JSON format:
+
+````javascript
+// Get all elements
+myBIMViewer.server.getODataElements("WestRiversideHospital", {}, (response) => {
+    console.log(`Found ${response.value.length} elements`);
+    console.log("Response:", JSON.stringify(response, null, 2));
+});
+````
+
+#### OData Query Options
+
+The endpoint supports standard OData query options:
+
+````javascript
+// Filter by element type
+myBIMViewer.server.getODataElements("WestRiversideHospital", {
+    $filter: "type eq 'IfcWall'"
+}, (response) => {
+    console.log(`Found ${response.value.length} walls`);
+});
+
+// Search by name containing text
+myBIMViewer.server.getODataElements("WestRiversideHospital", {
+    $filter: "contains(name, 'Basic')"
+}, (response) => {
+    console.log("Elements containing 'Basic':", response.value);
+});
+
+// Select specific fields only
+myBIMViewer.server.getODataElements("WestRiversideHospital", {
+    $select: "id,name,type"
+}, (response) => {
+    console.log("Selected fields only:", response.value);
+});
+
+// Pagination
+myBIMViewer.server.getODataElements("WestRiversideHospital", {
+    $top: 10,
+    $skip: 20
+}, (response) => {
+    console.log("Page 3 (10 elements):", response.value);
+});
+
+// Combined query
+myBIMViewer.server.getODataElements("WestRiversideHospital", {
+    $filter: "type eq 'IfcWall'",
+    $select: "id,name,type,attributes",
+    $top: 5
+}, (response) => {
+    console.log("Filtered, selected, and paginated:", response.value);
+});
+````
+
+#### OData Response Format
+
+The OData endpoint returns responses in standard OData JSON format:
+
+````json
+{
+    "@odata.context": "$metadata#Elements",
+    "@odata.count": 150,
+    "value": [
+        {
+            "id": "2HaS6zNOX8xOGjmaNi_rT3",
+            "projectId": "WestRiversideHospital",
+            "modelId": "architectural",
+            "name": "Basic Wall:Exterior - Limestone",
+            "type": "IfcWall",
+            "parent": "2hExBg8jj4NRG6zzD0RZML",
+            "attributes": "{\"material\":\"Limestone\",\"height\":\"3.0m\"}"
+        }
+    ]
+}
+````
+
+**Supported Filter Operations:**
+- ````eq```` - Equality (````type eq 'IfcWall'````)
+- ````contains()```` - Text contains (````contains(name, 'Basic')````)
+- ````startswith()```` - Text starts with (````startswith(name, 'Steel')````)
+
+**Element Properties:**
+- ````id```` - Unique element identifier
+- ````projectId```` - Project containing the element
+- ````modelId```` - Model containing the element
+- ````name```` - Element name/description
+- ````type```` - IFC type (IfcWall, IfcBeam, etc.)
+- ````parent```` - Parent element ID in hierarchy
+- ````attributes```` - JSON string of additional properties
+
 ## Loading Projects and Models
 
 Let's now load some of the projects and models that we queried in the previous section.
