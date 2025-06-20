@@ -927,6 +927,44 @@ Since our object info exists, we'll get a result similar to this:
 
 The ````Server```` class now includes OData (Open Data Protocol) endpoints that provide standardized REST API access to BIM elements and their properties. This enables external systems to query and integrate with BIM data using industry-standard OData conventions.
 
+#### OData HTTP Endpoints
+
+When deploying with a web server, the OData service is accessible via the following HTTP endpoints:
+
+**Service Document**
+````
+GET {baseURL}/odata/
+````
+
+**Service Metadata**
+````
+GET {baseURL}/odata/$metadata
+````
+Returns the OData service metadata document describing available entities and their properties.
+
+**Elements Collection**
+````
+GET {baseURL}/odata/Elements
+````
+Returns all elements across all models in OData JSON format.
+
+**Elements for Specific Project**
+````
+GET {baseURL}/odata/Elements?$filter=projectId eq '{projectId}'
+````
+Returns elements filtered by project ID.
+
+**Filtered Queries**
+````
+GET {baseURL}/odata/Elements?$filter=type eq 'IfcWall'
+GET {baseURL}/odata/Elements?$filter=contains(name,'Basic')
+GET {baseURL}/odata/Elements?$select=id,name,type&$top=10
+````
+
+Where ````{baseURL}```` is your server's base URL (e.g., ````http://localhost:8080/data````).
+
+> **Note:** The current JavaScript implementation provides OData functionality through API methods. To enable HTTP access, implement server-side endpoints that follow these URL patterns and return responses in the same format as the JavaScript API methods.
+
 #### OData Service Metadata
 
 Get the OData service metadata document that describes available entities:
