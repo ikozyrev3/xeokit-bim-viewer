@@ -72,6 +72,14 @@ npm install
 npm run serve
 ```
 
+This starts a Node.js server on port 8080 that serves both static files and the OData endpoints.
+
+For static file serving only (legacy):
+
+```bash
+npm run serve-static
+```
+
 5. Go to `http://localhost:8080/app/index.html?projectId=<your projectID here>`
 
 ## Version compatibility with xeokit-sdk
@@ -961,9 +969,9 @@ GET {baseURL}/odata/Elements?$filter=contains(name,'Basic')
 GET {baseURL}/odata/Elements?$select=id,name,type&$top=10
 ````
 
-Where ````{baseURL}```` is your server's base URL (e.g., ````http://localhost:8080/data````).
+Where ````{baseURL}```` is your server's base URL (e.g., ````http://localhost:8080````).
 
-> **Note:** The current JavaScript implementation provides OData functionality through API methods. To enable HTTP access, implement server-side endpoints that follow these URL patterns and return responses in the same format as the JavaScript API methods.
+> **Note:** HTTP access to OData endpoints is now available when using ````npm run serve````. The server implements endpoints that follow these URL patterns and return responses in the same format as the JavaScript API methods.
 
 #### OData Service Metadata
 
