@@ -1309,6 +1309,94 @@ class BIMViewer extends Controller {
     }
 
     /**
+     * Finds objects by their name.
+     *
+     * @param {String} objectName Name of the object(s) to find
+     * @returns {String[]} Array of object IDs that match the given name
+     */
+    findObjectsByName(objectName) {
+        if (!objectName) {
+            this.error("findObjectsByName() - Argument expected: objectName");
+            return [];
+        }
+        const foundObjectIds = [];
+        const metaScene = this.viewer.metaScene;
+        const metaObjects = metaScene.metaObjects;
+        for (let objectId in metaObjects) {
+            const metaObject = metaObjects[objectId];
+            if (metaObject.name === objectName) {
+                foundObjectIds.push(objectId);
+            }
+        }
+        return foundObjectIds;
+    }
+
+    /**
+     * Finds objects by their class/type.
+     *
+     * @param {String} className Name of the class/type to find
+     * @returns {String[]} Array of object IDs that match the given class/type
+     */
+    findObjectsByClass(className) {
+        if (!className) {
+            this.error("findObjectsByClass() - Argument expected: className");
+            return [];
+        }
+        const foundObjectIds = [];
+        const metaScene = this.viewer.metaScene;
+        const metaObjects = metaScene.metaObjects;
+        for (let objectId in metaObjects) {
+            const metaObject = metaObjects[objectId];
+            if (metaObject.type === className) {
+                foundObjectIds.push(objectId);
+            }
+        }
+        return foundObjectIds;
+    }
+
+    /**
+     * Highlights objects with the given name in the tree views within the Objects, Classes and Storeys tabs.
+     *
+     * Also scrolls the object's node into view within each tree, then highlights it.
+     *
+     * De-highlights whatever node is currently highlighted in each of those trees.
+     *
+     * @param {String} objectName Name of the object(s) to highlight
+     */
+    showObjectsByNameInExplorers(objectName) {
+        if (!objectName) {
+            this.error("showObjectsByNameInExplorers() - Argument expected: objectName");
+            return;
+        }
+        const objectIds = this.findObjectsByName(objectName);
+        if (objectIds.length > 0) {
+            // Show the first object found in explorers
+            this.showObjectInExplorers(objectIds[0]);
+        }
+    }
+
+    /**
+     * Highlights objects with the given class/type in the tree views within the Objects, Classes and Storeys tabs.
+     *
+     * Also scrolls the object's node into view within each tree, then highlights it.
+     *
+     * De-highlights whatever node is currently highlighted in each of those trees.
+     *
+     * @param {String} className Name of the class/type to highlight
+     */
+    showObjectsByClassInExplorers(className) {
+        if (!className) {
+            this.error("showObjectsByClassInExplorers() - Argument expected: className");
+            return;
+        }
+        const objectIds = this.findObjectsByClass(className);
+        if (objectIds.length > 0) {
+            // Show the first object found in explorers
+            this.showObjectInExplorers(objectIds[0]);
+        }
+    }
+
+    /**
      * Shows the properties of the given object in the Properties tab.
      *
      * @param {String} objectId ID of the object
