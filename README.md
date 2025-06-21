@@ -82,6 +82,64 @@ npm run serve-static
 
 5. Go to `http://localhost:8080/app/index.html?projectId=<your projectID here>`
 
+**Method 3 - Using Docker**
+
+1. Make sure you have Docker installed on your system
+2. Clone this repository:
+
+```bash
+git clone https://github.com/xeokit/xeokit-bim-viewer
+cd xeokit-bim-viewer
+```
+
+3. Add your converted models to `data` directory.
+
+4. Build and run with Docker:
+
+```bash
+# Build the Docker image
+docker build -t xeokit-bim-viewer .
+
+# Run the container
+docker run -p 8080:8080 xeokit-bim-viewer
+```
+
+Or use Docker Compose for easier management:
+
+```bash
+# Run with docker compose
+docker compose up
+
+# Run in detached mode
+docker compose up -d
+
+# Stop the application
+docker compose down
+```
+
+5. Go to `http://localhost:8081/app/index.html?projectId=<your projectID here>` (note the port 8081 when using docker-compose)
+
+**Docker Environment Variables**
+
+You can customize the Docker container using environment variables:
+
+- `NODE_ENV`: Set to `production` or `development` (default: `production`)
+- `HOST`: Host to bind to (default: `0.0.0.0`)
+- `PORT`: Port to run the server on (default: `8080`)
+
+```bash
+# Example with custom port
+docker run -e PORT=3000 -p 3000:3000 xeokit-bim-viewer
+```
+
+**Custom Data Directory**
+
+To use your own data directory with Docker, mount it as a volume:
+
+```bash
+docker run -v /path/to/your/data:/app/app/data:ro -p 8080:8080 xeokit-bim-viewer
+```
+
 ## Version compatibility with xeokit-sdk
 
 Starting with version 2.6.0, releases of xeokit-bim-viewer have been aligned with xeokit-sdk by matching their major and minor version numbers.
@@ -107,6 +165,7 @@ Read the documentation below to get started.
 - [Features](#features)
 - [Demos](#demos)
 - [License](#license)
+- [Usage](#usage)
 - [The Viewer Application](#the-viewer-application)
 - [Model Database](#model-database)
 - [Viewer Configurations](#viewer-configurations)

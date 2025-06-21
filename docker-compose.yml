@@ -1,0 +1,39 @@
+services:
+  xeokit-bim-viewer:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=8080
+    # volumes:
+    #   # Optionally mount your custom data directory
+    #   - ./custom-data:/app/app/data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); const options = { hostname: 'localhost', port: 8080, path: '/', timeout: 2000 }; const req = http.get(options, (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }); req.on('error', () => process.exit(1)); req.on('timeout', () => { req.destroy(); process.exit(1); });"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development service with hot reload (optional)
+  xeokit-bim-viewer-dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PORT=8080
+    volumes:
+      - .:/app
+      - /app/node_modules
+    profiles:
+      - dev
+    restart: unless-stopped
